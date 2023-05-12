@@ -1,1 +1,1 @@
-# snake
+Змейка на Canvas
