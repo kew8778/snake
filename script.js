@@ -192,7 +192,7 @@ function finish() {
     ctx.fillText('Уровень', 250, 200);
     ctx.fillText('пройден', 250, 300);
 
-    if (level < levels.length) {
+    if (level < levels.length - 1) {
         level++;
     }
 
