@@ -4,7 +4,9 @@ const canvas = document.querySelector('.ctx');
 const ctx = canvas.getContext('2d');
 const btn = document.querySelector('.btn');
 
-let widthSnake = 20; // поле 25 х 25
+let widthCanvas = canvas.width;
+let heightCanvas = canvas.height;
+let widthSnake = 20; // ширина змеи, поле 25 х 25 при канве 500 х 500
 let snake; // квадраты змеи 
 let directionSnake; // функция направление змеи
 let timerId; // запускает directionSnake
@@ -20,8 +22,8 @@ let level = 0; // уровень игры
 let speedSnake; // скорость змеи
 let needToEat; // нужно сожрать
 
-reset();
-setLevel(level);
+reset(); // очистка поля и сброс змеи
+setLevel(level); // загрузка уровня
 
 btn.addEventListener('click', start);
 
@@ -32,11 +34,11 @@ function start() {
     btn.removeEventListener('click', start);
                
     timerId = setInterval( () => {
-        directionSnake();
-        document.addEventListener('keydown', activeArrows);
+        directionSnake(); // ход змеи
+        document.addEventListener('keydown', activeArrows); // активируем навигацию
     }, speedSnake);
 
-    createFood();
+    createFood(); // рандом еда
 }
 
 function up() {
@@ -53,12 +55,12 @@ function up() {
 function down() {
     snake.unshift([snake[0][0], snake[0][1] + widthSnake]);
                 
-    if (snake[0][1] > 480 || isSnake()) {
+    if (snake[0][1] > heightCanvas - widthSnake || isSnake()) {
         gameOver();
         return;
     }
 
-        move();
+    move();
 }
 
 function left() {
@@ -75,7 +77,7 @@ function left() {
 function rigth() {
     snake.unshift([snake[0][0] + widthSnake, snake[0][1]]);
                 
-    if (snake[0][0] > 480 || isSnake()) {
+    if (snake[0][0] > widthCanvas - widthSnake || isSnake()) {
         gameOver();
         return;
     }
@@ -109,7 +111,7 @@ function move() {
     }
 }
 
-function activeArrows(event) {
+function activeArrows(event) { // нужно доработать )))
     if (event.code === 'ArrowDown' && directionSnake !== up) {
         document.removeEventListener('keydown', activeArrows);
         directionSnake = down;
@@ -132,12 +134,14 @@ function activeArrows(event) {
 }
 
 function reset() {
-    ctx.clearRect(0, 0, 500, 500);
+    ctx.clearRect(0, 0, widthCanvas, heightCanvas);
     ctx.fillStyle = 'black';
     directionSnake = up;
-    snake = [
-        [240, 440],
-        [240, 460],
+
+    // змейку доработать )
+    snake = [ 
+        [widthCanvas / 2 - widthSnake / 2, heightCanvas - widthSnake * 3],
+        [widthCanvas / 2 - widthSnake / 2, heightCanvas - widthSnake * 2],
     ];
     ctx.fillRect(...snake[0], widthSnake, widthSnake);
     ctx.fillRect(...snake[1], widthSnake, widthSnake);
