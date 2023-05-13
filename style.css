@@ -1,8 +1,17 @@
-body {
+.page {
+    margin: 0;
+    padding: 10px;
+
     text-align: center;
     background-color: bisque;
 }
-button {
+
+.ctx {
+    background-color: #0ff855;
+    border: 10px solid black;
+}
+
+.btn {
     font-size: 30px;
     background-color: yellow;
 }

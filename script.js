@@ -1,32 +1,46 @@
 'use strict';
 
-const ctx = document.querySelector('.ctx').getContext('2d');
-const btn = document.querySelector('button');
+const canvas = document.querySelector('.ctx');
+const ctx = canvas.getContext('2d');
+const btn = document.querySelector('.btn');
 
-let snake;
-let timerId;
-let directionSnake;
-let food;
+let widthSnake = 20; // поле 25 х 25
+let snake; // квадраты змеи 
+let directionSnake; // функция направление змеи
+let timerId; // запускает directionSnake
+let food; // рандом квадрат еды
+const levels = [
+    {speed: 300, foods: 5},
+    {speed: 250, foods: 7},
+    {speed: 210, foods: 9},
+    {speed: 175, foods: 11},
+    {speed: 145, foods: 13},
+]; // уровни игры
+let level = 0; // уровень игры
+let speedSnake; // скорость змеи
+let needToEat; // нужно сожрать
 
 reset();
+setLevel(level);
 
 btn.addEventListener('click', start);
 
 function start() {
     reset();
+    setLevel(level);
 
     btn.removeEventListener('click', start);
                
     timerId = setInterval( () => {
         directionSnake();
         document.addEventListener('keydown', activeArrows);
-    }, 300);
+    }, speedSnake);
 
     createFood();
 }
 
 function up() {
-    snake.unshift([snake[0][0], snake[0][1] - 20]);
+    snake.unshift([snake[0][0], snake[0][1] - widthSnake]);
                 
     if (snake[0][1] < 0 || isSnake()) {
         gameOver();
@@ -37,7 +51,7 @@ function up() {
 }
 
 function down() {
-    snake.unshift([snake[0][0], snake[0][1] + 20]);
+    snake.unshift([snake[0][0], snake[0][1] + widthSnake]);
                 
     if (snake[0][1] > 480 || isSnake()) {
         gameOver();
@@ -48,7 +62,7 @@ function down() {
 }
 
 function left() {
-    snake.unshift([snake[0][0] - 20, snake[0][1]]);
+    snake.unshift([snake[0][0] - widthSnake, snake[0][1]]);
                 
     if (snake[0][0] < 0 || isSnake()) {
         gameOver();
@@ -59,7 +73,7 @@ function left() {
 }
 
 function rigth() {
-    snake.unshift([snake[0][0] + 20, snake[0][1]]);
+    snake.unshift([snake[0][0] + widthSnake, snake[0][1]]);
                 
     if (snake[0][0] > 480 || isSnake()) {
         gameOver();
@@ -73,8 +87,9 @@ function gameOver() {
     clearInterval(timerId);
 
     ctx.font = '70px Verdana';
+    ctx.textAlign = 'center';
     ctx.fillStyle = 'red';
-    ctx.fillText('Конец игры', 40, 250);
+    ctx.fillText('Конец игры', 250, 250);
 
     btn.addEventListener('click', start);
     document.removeEventListener('keydown', activeArrows);
@@ -82,11 +97,13 @@ function gameOver() {
 
 function move() {
     if (food[0] !== snake[0][0] || food[1] !== snake[0][1]) {
-        ctx.fillRect(snake[0][0], snake[0][1], 20, 20);
+        ctx.fillRect(snake[0][0], snake[0][1], widthSnake, widthSnake);
 
         const lengthSnake = snake.length;
-        ctx.clearRect(snake[lengthSnake - 1][0], snake[lengthSnake - 1][1], 20, 20);
+        ctx.clearRect(snake[lengthSnake - 1][0], snake[lengthSnake - 1][1], widthSnake, widthSnake);
         snake.pop();
+    } else if (snake.length >= needToEat + 2) {
+        finish();
     } else {
         createFood();
     }
@@ -117,17 +134,18 @@ function activeArrows(event) {
 function reset() {
     ctx.clearRect(0, 0, 500, 500);
     ctx.fillStyle = 'black';
-    ctx.fillRect(240, 440, 20, 40);
     directionSnake = up;
     snake = [
         [240, 440],
         [240, 460],
     ];
+    ctx.fillRect(...snake[0], widthSnake, widthSnake);
+    ctx.fillRect(...snake[1], widthSnake, widthSnake);
 }
 
 function createFood() {
-	const randomX = Math.floor(Math.random() * 25) * 20;
-    const randomY = Math.floor(Math.random() * 25) * 20;
+	const randomX = Math.floor(Math.random() * 25) * widthSnake;
+    const randomY = Math.floor(Math.random() * 25) * widthSnake;
 
     let isThere = false;
 
@@ -139,7 +157,7 @@ function createFood() {
 
     if (isThere === false) {
         food = [randomX, randomY];
-        ctx.fillRect(food[0], food[1], 20, 20);
+        ctx.fillRect(food[0], food[1], widthSnake, widthSnake);
     }
 }
 
@@ -153,4 +171,26 @@ function isSnake() {
     }
 
     return false;
+}
+
+function setLevel(level) {
+    speedSnake = levels[level].speed;
+    needToEat = levels[level].foods;
+}
+
+function finish() {
+    clearInterval(timerId);
+    document.removeEventListener('keydown', activeArrows);
+
+    ctx.font = '70px Verdana';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'green';
+    ctx.fillText('Уровень', 250, 200);
+    ctx.fillText('пройден', 250, 300);
+
+    if (level < levels.length) {
+        level++;
+    }
+
+    btn.addEventListener('click', start);
 }
