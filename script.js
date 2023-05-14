@@ -7,17 +7,19 @@ const btn = document.querySelector('.btn');
 let widthCanvas = canvas.width;
 let heightCanvas = canvas.height;
 let widthSnake = 20; // ширина змеи, поле 25 х 25 при канве 500 х 500
-let snake; // квадраты змеи 
+let snake; // массив квадратов змеи
+let colorSnake = 'black'; // цвет змеи
 let directionSnake; // функция направление змеи
 let timerId; // запускает directionSnake
 let food; // рандом квадрат еды
+let colorFood = 'blue'; // цвет еды
 const levels = [
     {speed: 300, foods: 5},
     {speed: 250, foods: 7},
     {speed: 210, foods: 9},
     {speed: 175, foods: 11},
     {speed: 145, foods: 13},
-]; // уровни игры
+]; // уровни игры, доработать
 let level = 0; // уровень игры
 let speedSnake; // скорость змеи
 let needToEat; // нужно сожрать
@@ -32,13 +34,19 @@ function start() {
     setLevel(level);
 
     btn.removeEventListener('click', start);
+    btn.textContent = 'Pause';
+    btn.addEventListener('click', pause);
                
+    startPlay();
+
+    createFood(); // рандом еда
+}
+
+function startPlay() {
     timerId = setInterval( () => {
         directionSnake(); // ход змеи
         document.addEventListener('keydown', activeArrows); // активируем навигацию
     }, speedSnake);
-
-    createFood(); // рандом еда
 }
 
 function up() {
@@ -93,22 +101,35 @@ function gameOver() {
     ctx.fillStyle = 'red';
     ctx.fillText('Конец игры', 250, 250);
 
+    btn.removeEventListener('click', pause);
+    btn.textContent = 'Start';
     btn.addEventListener('click', start);
+    
     document.removeEventListener('keydown', activeArrows);
 }
 
-function move() {
+function move() { // доделать
     if (food[0] !== snake[0][0] || food[1] !== snake[0][1]) {
-        ctx.fillRect(snake[0][0], snake[0][1], widthSnake, widthSnake);
+        removeTail();
 
-        const lengthSnake = snake.length;
-        ctx.clearRect(snake[lengthSnake - 1][0], snake[lengthSnake - 1][1], widthSnake, widthSnake);
-        snake.pop();
-    } else if (snake.length >= needToEat + 2) {
-        finish();
+        ctx.fillStyle = colorSnake;
+        ctx.fillRect(...snake[0], widthSnake, widthSnake);
     } else {
-        createFood();
+        ctx.fillStyle = colorSnake;
+        ctx.fillRect(...snake[0], widthSnake, widthSnake);
+
+        if (snake.length >= needToEat + 2) {
+            finish();
+        } else {
+            createFood();
+        }
     }
+}
+
+function removeTail() {
+    const lengthSnake = snake.length;
+    ctx.clearRect(...snake[lengthSnake - 1], widthSnake, widthSnake);
+    snake.pop();
 }
 
 function activeArrows(event) { // нужно доработать )))
@@ -135,7 +156,6 @@ function activeArrows(event) { // нужно доработать )))
 
 function reset() {
     ctx.clearRect(0, 0, widthCanvas, heightCanvas);
-    ctx.fillStyle = 'black';
     directionSnake = up;
 
     // змейку доработать )
@@ -143,6 +163,7 @@ function reset() {
         [widthCanvas / 2 - widthSnake / 2, heightCanvas - widthSnake * 3],
         [widthCanvas / 2 - widthSnake / 2, heightCanvas - widthSnake * 2],
     ];
+    ctx.fillStyle = colorSnake;
     ctx.fillRect(...snake[0], widthSnake, widthSnake);
     ctx.fillRect(...snake[1], widthSnake, widthSnake);
 }
@@ -161,14 +182,15 @@ function createFood() {
 
     if (isThere === false) {
         food = [randomX, randomY];
-        ctx.fillRect(food[0], food[1], widthSnake, widthSnake);
+        ctx.fillStyle = colorFood;
+        ctx.fillRect(...food, widthSnake, widthSnake);
     }
 }
 
 function isSnake() {
     const lengthSnake = snake.length;
 
-    for (let i = 1; i < lengthSnake; i++) {
+    for (let i = 1; i < lengthSnake - 1; i++) {
         if (snake[0][0] === snake[i][0] && snake[0][1] === snake[i][1]) {
             return true;
         }
@@ -197,4 +219,19 @@ function finish() {
     }
 
     btn.addEventListener('click', start);
+}
+
+function pause() {
+    clearInterval(timerId);
+    document.removeEventListener('keydown', activeArrows);
+    btn.removeEventListener('click', pause);
+    btn.textContent = 'Continue';
+    btn.addEventListener('click', continuePlay);
+}
+
+function continuePlay() {
+    startPlay();
+    btn.removeEventListener('click', continuePlay);
+    btn.textContent = 'Pause';
+    btn.addEventListener('click', pause);
 }
