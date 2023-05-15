@@ -14,11 +14,14 @@ let timerId; // запускает directionSnake
 let food; // рандом квадрат еды
 let colorFood = 'blue'; // цвет еды
 const levels = [
-    {speed: 300, foods: 5},
-    {speed: 250, foods: 7},
-    {speed: 210, foods: 9},
-    {speed: 175, foods: 11},
-    {speed: 145, foods: 13},
+    {speed: 500, foods: 5},
+    {speed: 400, foods: 7},
+    {speed: 320, foods: 9},
+    {speed: 256, foods: 11},
+    {speed: 205, foods: 13},
+    {speed: 164, foods: 15},
+    {speed: 131, foods: 17},
+    {speed: 105, foods: 19},
 ]; // уровни игры, доработать
 let level = 0; // уровень игры
 let speedSnake; // скорость змеи
@@ -215,6 +218,8 @@ function finish() {
         level++;
     }
 
+    btn.removeEventListener('click', pause);
+    btn.textContent = 'Start';
     btn.addEventListener('click', start);
 }
 
