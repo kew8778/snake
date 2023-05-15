@@ -168,23 +168,20 @@ function reset() {
     ctx.fillRect(...snake[1], widthSnake, widthSnake);
 }
 
-function createFood() {
+function createFood() { // нужно др вариант
 	const randomX = Math.floor(Math.random() * 25) * widthSnake;
     const randomY = Math.floor(Math.random() * 25) * widthSnake;
-
-    let isThere = false;
 
     for (let square of snake) {
         if (square[0] === randomX && square[1] === randomY) {
             createFood();
+            return;
         }
     }
 
-    if (isThere === false) {
-        food = [randomX, randomY];
-        ctx.fillStyle = colorFood;
-        ctx.fillRect(...food, widthSnake, widthSnake);
-    }
+    food = [randomX, randomY];
+    ctx.fillStyle = colorFood;
+    ctx.fillRect(...food, widthSnake, widthSnake);
 }
 
 function isSnake() {
