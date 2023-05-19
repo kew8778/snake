@@ -1,11 +1,11 @@
 'use strict';
-let exp = 0;
+
+// DOM
 const canvas = document.querySelector('.ctx');
 const ctx = canvas.getContext('2d');
 const btn = document.querySelector('.btn');
 
-// --- ПОЛЕ ---
-
+// Переменные
 let widthCanvas = canvas.width; // 500
 let heightCanvas = canvas.height; // 500
 let columns = 25; // кол-во столбцов
@@ -13,86 +13,16 @@ let rows = 25; // кол-во рядов
 let squares = columns * rows; // 625
 let widthSquares = widthCanvas / columns; // 20, ширина квадратов
 
-let arrSquares = []; // массив квадратов с координатами
-
-function fillArrSquares() {   
-    for (let i = 0; i < columns; i++) {
-        let column = [];
-
-        for (let j = 0; j < rows; j++) {
-            let square = {};
-
-            square.coordinate = [i * widthSquares, j * widthSquares];
-            square.mark = 'free';
-
-            column.push(square);
-        }
-
-        arrSquares.push(column);
-    }
-}
-
-function fillSquare(x, y, mark) {
-    ctx.fillRect(...arrSquares[x][y].coordinate, widthSquares, widthSquares);
-    arrSquares[x][y].mark = mark;
-}
-
-function removeSquare(x, y) {
-    ctx.clearRect(...arrSquares[x][y].coordinate, widthSquares, widthSquares);
-    arrSquares[x][y].mark = 'free';
-}
-
-// --- ЗМЕЯ ---
+let arrSquares = []; // массив всех квадратов с координатами и метками
 
 let snake = [[12, 22], [12, 23]]; // квадраты начальной змеи (нумерация с 0)
 let colorSnake = 'black'; // цвет змеи
 let directionSnake = 'up'; // направление змеи
 let speedSnake; // скорость змеи
 
-function outputSnake() {
-    const lengthSnake = snake.length;
-    ctx.fillStyle = colorSnake;
-
-    for (let i = 0; i < lengthSnake; i++) {
-        fillSquare(...snake[i], 'snake');
-    }
-}
-
-// --- БАРЬЕРЫ --- в доработке
 let bariers = []; // квадраты барьеров
 
-function outputBariers() {
-    if (bariers.length === 0) {
-        return;
-    }
-}
-
-// --- ЕДА ---
-
 let colorFood = 'blue'; // цвет еды
-
-function outputFood() {
-    const numFree = squares - snake.length - bariers.length; // число свободных квадратов
-
-    const randomSquare = Math.floor(Math.random() * (numFree)) + 1;
-
-    let num = 0;
-
-    for (let i = 0; i < columns; i++) {
-        for (let j = 0; j < rows; j++) {
-            if (arrSquares[i][j].mark === 'free') {
-                num++;
-
-                if (num === randomSquare) {
-                    ctx.fillStyle = colorFood;
-                    return fillSquare(i, j, 'food');
-                }
-            }
-        }
-    }
-}
-
-// --- УРОВНИ --- доработать
 
 let level = 0; // текущий уровень
 let needToEat; // нужно съесть
@@ -108,25 +38,7 @@ const levels = [
     {speed: 105, foods: 19},
 ]; // уровни игры
 
-function loadLevel(level) {
-    reset(); // очистка поля
-    fillArrSquares(); // заполняем массив с данными квадратов
-    outputSnake(); // выводим змею
-    outputBariers(); // выводим барьеры
-    speedSnake = levels[level].speed;
-    needToEat = levels[level].foods;
-}
-
-function reset() {
-    ctx.clearRect(0, 0, widthCanvas, heightCanvas);
-    arrSquares = [];
-    snake = [[12, 22], [12, 23]];
-    directionSnake = 'up';
-    bariers = [];
-}
-
-// --- НАВИГАЦИЯ ---
-
+// Управление
 btn.addEventListener('click', start);
 
 function start() {
@@ -176,8 +88,62 @@ function activeArrows(event) { // нужно доработать )))
     }
 }
 
-// --- ИГРА ---
+// Загрузка
+function loadLevel(level) {
+    reset(); // очистка поля
+    fillArrSquares(); // заполняем массив с данными квадратов
+    outputSnake(); // выводим змею
+    outputBariers(); // выводим барьеры
+    speedSnake = levels[level].speed;
+    needToEat = levels[level].foods;
+}
 
+function reset() {
+    ctx.clearRect(0, 0, widthCanvas, heightCanvas);
+    arrSquares = [];
+    snake = [[12, 22], [12, 23]];
+    directionSnake = 'up';
+    bariers = [];
+}
+
+function fillArrSquares() {   
+    for (let i = 0; i < columns; i++) {
+        let column = [];
+
+        for (let j = 0; j < rows; j++) {
+            let square = {};
+
+            square.coordinate = [i * widthSquares, j * widthSquares];
+            square.mark = 'free';
+
+            column.push(square);
+        }
+
+        arrSquares.push(column);
+    }
+}
+
+function outputSnake() {
+    const lengthSnake = snake.length;
+    ctx.fillStyle = colorSnake;
+
+    for (let i = 0; i < lengthSnake; i++) {
+        fillSquare(...snake[i], 'snake');
+    }
+}
+
+function fillSquare(x, y, mark) {
+    ctx.fillRect(...arrSquares[x][y].coordinate, widthSquares, widthSquares);
+    arrSquares[x][y].mark = mark;
+}
+
+function outputBariers() {
+    if (bariers.length === 0) {
+        return;
+    }
+}
+
+// Игра
 loadLevel(level);
 let timerId;
 
@@ -185,15 +151,30 @@ function startPlay() {
     outputFood();
 
     timerId = setInterval( () => {
-        let d1 = Date.now();
         goSnake();
-        let d2 = Date.now();
-        if (d2 - d1 > exp) {
-            exp = d2 - d1;
-            console.log(exp);
-        }
         document.addEventListener('keydown', activeArrows); // активируем навигацию
     }, speedSnake);
+}
+
+function outputFood() {
+    const numFree = squares - snake.length - bariers.length; // число свободных квадратов
+
+    const randomSquare = Math.floor(Math.random() * (numFree)) + 1;
+
+    let num = 0;
+
+    for (let i = 0; i < columns; i++) {
+        for (let j = 0; j < rows; j++) {
+            if (arrSquares[i][j].mark === 'free') {
+                num++;
+
+                if (num === randomSquare) {
+                    ctx.fillStyle = colorFood;
+                    return fillSquare(i, j, 'food');
+                }
+            }
+        }
+    }
 }
 
 function goSnake() {
@@ -259,6 +240,11 @@ function getNextSquare() {
     if (directionSnake === 'rigth' && x < columns - 1) {
         return [x + 1, y];
     }
+}
+
+function removeSquare(x, y) {
+    ctx.clearRect(...arrSquares[x][y].coordinate, widthSquares, widthSquares);
+    arrSquares[x][y].mark = 'free';
 }
 
 function gameOver() {
