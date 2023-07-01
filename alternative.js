@@ -28,7 +28,7 @@ let level = 0; // текущий уровень
 let needToEat; // нужно съесть
 
 const levels = [
-    {speed: 300, foods: 500},
+    {speed: 500, foods: 5},
     {speed: 400, foods: 7},
     {speed: 320, foods: 9},
     {speed: 256, foods: 11},
@@ -47,7 +47,8 @@ function start() {
     btn.removeEventListener('click', start);
     btn.textContent = 'Pause';
     btn.addEventListener('click', pause);
-               
+    
+    outputFood();
     startPlay();
 }
 
@@ -148,8 +149,6 @@ loadLevel(level);
 let timerId;
 
 function startPlay() {
-    outputFood();
-
     timerId = setInterval( () => {
         goSnake();
         document.addEventListener('keydown', activeArrows); // активируем навигацию
