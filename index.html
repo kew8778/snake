@@ -3,13 +3,44 @@
     <head>
         <meta charset="UTF-8">
         <title>Змейка</title>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="style.css?=35">
     </head>
 
     <body class="page">
-        <canvas class="ctx" width="500" height="500"></canvas><br>
+        <div class="canvas-box"></div>
 
-        <button class="btn">Start</button>
+        <div class="control-box">
+            <button class="btn">Start</button><br>
+
+            <span class="btns">&#160;&#160;<span class="up">&#9650;</span>&#160;&#160;<br>
+<span class="left">&#9668;</span>&#160;&#160;&#160;<span class="right">&#9658;</span><br>
+&#160;&#160;<span class="down">&#9660;</span>&#160;&#160;
+</span>
+
+        </div>
+
+        <script>
+            'use strict';
+
+            // адаптив
+            let canvasBox = document.querySelector('.canvas-box');
+            
+            // размеры окна со скролингом
+            let windowWidth = window.innerWidth;
+            let windowHeight = window.innerHeight;
+
+            if (windowWidth > windowHeight) {
+                let canvas = document.createElement('canvas');
+
+                let sqr = Math.floor(windowHeight / 27);
+                canvas.height = 25 * sqr;
+                canvas.width = 25 * sqr;
+
+                canvas.classList.add('ctx');
+                canvasBox.prepend(canvas);
+            }
+
+        </script>
 
         <script src="alternative.js"></script>
     </body>

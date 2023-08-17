@@ -1,17 +1,48 @@
 .page {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     margin: 0;
-    padding: 10px;
+    padding: 1.85vh;
 
-    text-align: center;
     background-color: bisque;
 }
 
+.control-box {
+    display: block;
+    padding: 10vh 10vh 0;
+    text-align: center;
+}
+
+.canvas-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 96.3vh;
+    height: 96.3vh;
+    background-color: black;
+}
+
 .ctx {
+    margin: 0 auto;
     background-color: #0ff855;
-    border: 10px solid black;
 }
 
 .btn {
     font-size: 30px;
     background-color: yellow;
+    margin-bottom: 30px;
+}
+
+.btns {
+    font-size: 70px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.up:hover, .down:hover, .left:hover, .right:hover {
+    color: yellow;
+}
+
+.up:active, .down:active, .left:active, .right:active {
+    color: red;
 }

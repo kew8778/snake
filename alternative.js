@@ -1,17 +1,27 @@
 'use strict';
 
-// DOM
+// DOM:
+// - поле canvas
 const canvas = document.querySelector('.ctx');
 const ctx = canvas.getContext('2d');
+
+// - кнопка старт/пауза
 const btn = document.querySelector('.btn');
 
+// - кнопки направления
+const up = document.querySelector('.up');
+const down = document.querySelector('.down');
+const left = document.querySelector('.left');
+const right = document.querySelector('.right');
+
+
 // Переменные
-let widthCanvas = canvas.width; // 500
-let heightCanvas = canvas.height; // 500
+let widthCanvas = canvas.width;
+let heightCanvas = canvas.height;
 let columns = 25; // кол-во столбцов
 let rows = 25; // кол-во рядов
 let squares = columns * rows; // 625
-let widthSquares = widthCanvas / columns; // 20, ширина квадратов
+let widthSquares = widthCanvas / columns;
 
 let arrSquares = []; // массив всех квадратов с координатами и метками
 
@@ -67,6 +77,33 @@ function continuePlay() {
     btn.addEventListener('click', pause);
 }
 
+// кнопки направления змеи
+// привязываем клики по кнопкам на экране к кнопкам на клаве
+down.addEventListener('click', () => {
+    document.dispatchEvent(
+        new KeyboardEvent( 'keydown', {code: 'ArrowDown'} )
+    );
+});
+
+up.addEventListener('click', () => {
+    document.dispatchEvent(
+        new KeyboardEvent( 'keydown', {code: 'ArrowUp'} )
+    );
+});
+
+right.addEventListener('click', () => {
+    document.dispatchEvent(
+        new KeyboardEvent( 'keydown', {code: 'ArrowRight'} )
+    );
+});
+
+left.addEventListener('click', () => {
+    document.dispatchEvent(
+        new KeyboardEvent( 'keydown', {code: 'ArrowLeft'} )
+    );
+});
+
+// обработка кликов по кнопкам направления змеи
 function activeArrows(event) { // нужно доработать )))
     if (event.code === 'ArrowDown' && directionSnake !== 'up') {
         document.removeEventListener('keydown', activeArrows);
