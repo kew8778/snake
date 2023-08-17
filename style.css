@@ -20,12 +20,11 @@
     align-items: center;
     width: 96.3vmin;
     height: 96.3vmin;
-    background-color: black;
 }
 
 .ctx {
-    margin: 0 auto;
     background-color: #0ff855;
+    border: 1.85vmin solid black;
 }
 
 .btn {
