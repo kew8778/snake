@@ -23,22 +23,24 @@
             'use strict';
 
             // адаптив
+            ;(function adapt() {
             let canvasBox = document.querySelector('.canvas-box');
             
             // размеры окна со скролингом
             let windowWidth = window.innerWidth;
             let windowHeight = window.innerHeight;
 
-            if (windowWidth > windowHeight) {
-                let canvas = document.createElement('canvas');
+            let minLength = (windowWidth > windowHeight) ? windowHeight: windowWidth;
+            
+            let canvas = document.createElement('canvas');
 
-                let sqr = Math.floor(windowHeight / 27);
-                canvas.height = 25 * sqr;
-                canvas.width = 25 * sqr;
+            let sqr = Math.floor(minLength / 27);
+            canvas.height = 25 * sqr;
+            canvas.width = 25 * sqr;
 
-                canvas.classList.add('ctx');
-                canvasBox.prepend(canvas);
-            }
+            canvas.classList.add('ctx');
+            canvasBox.prepend(canvas);
+            })();
 
         </script>
 
