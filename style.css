@@ -3,14 +3,14 @@
     flex-wrap: wrap;
     justify-content: center;
     margin: 0;
-    padding: 1.85vh;
+    padding: 1.85vmin;
 
     background-color: bisque;
 }
 
 .control-box {
     display: block;
-    padding: 10vh 10vh 0;
+    padding: 10vmin 10vmin 0;
     text-align: center;
 }
 
@@ -18,8 +18,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 96.3vh;
-    height: 96.3vh;
+    width: 96.3vmin;
+    height: 96.3vmin;
     background-color: black;
 }
 
