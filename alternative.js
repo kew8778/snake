@@ -286,10 +286,10 @@ function removeSquare(x, y) {
 function gameOver() {
     clearInterval(timerId);
 
-    ctx.font = '70px Verdana';
+    ctx.font = widthSquares * 3 + 'px Verdana';
     ctx.textAlign = 'center';
     ctx.fillStyle = 'red';
-    ctx.fillText('Конец игры', 250, 250);
+    ctx.fillText('Конец игры', widthCanvas / 2, heightCanvas / 2);
 
     btn.removeEventListener('click', pause);
     btn.textContent = 'Start';
@@ -302,11 +302,11 @@ function finish() {
     clearInterval(timerId);
     document.removeEventListener('keydown', activeArrows);
 
-    ctx.font = '70px Verdana';
+    ctx.font = widthSquares * 3 + 'px Verdana';
     ctx.textAlign = 'center';
     ctx.fillStyle = 'green';
-    ctx.fillText('Уровень', 250, 200);
-    ctx.fillText('пройден', 250, 300);
+    ctx.fillText('Уровень', widthCanvas / 2, heightCanvas / 2 - 2 * widthSquares);
+    ctx.fillText('пройден', widthCanvas / 2, heightCanvas / 2 + 2 * widthSquares);
 
     if (level < levels.length - 1) {
         level++;
