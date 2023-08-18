@@ -35,7 +35,7 @@
 
 .btns {
     font-size: 70px;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: monospace;
 }
 
 .up:hover, .down:hover, .left:hover, .right:hover {
