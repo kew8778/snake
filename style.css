@@ -38,8 +38,8 @@
     font-family: monospace;
 }
 
-.up:hover, .down:hover, .left:hover, .right:hover {
-    color: yellow;
+.up:hover, .down:hover, .left:hover, .right:hover, .btn:hover {
+    cursor: pointer;
 }
 
 .up:active, .down:active, .left:active, .right:active {

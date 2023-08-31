@@ -20,12 +20,11 @@ let widthCanvas = canvas.width;
 let heightCanvas = canvas.height;
 let columns = 25; // кол-во столбцов
 let rows = 25; // кол-во рядов
-let squares = columns * rows; // 625
-let widthSquares = widthCanvas / columns;
+let widthSquare = widthCanvas / columns;
 
-let arrSquares = []; // массив всех квадратов с координатами и метками
+let squares = []; // матрица поля с метками
 
-let snake = [[12, 22], [12, 23]]; // квадраты начальной змеи (нумерация с 0)
+let snake = [[12, 22], [12, 23]]; // квадраты начальной змеи
 let colorSnake = 'black'; // цвет змеи
 let directionSnake = 'up'; // направление змеи
 let speedSnake; // скорость змеи
@@ -129,7 +128,6 @@ function activeArrows(event) { // нужно доработать )))
 // Загрузка
 function loadLevel(level) {
     reset(); // очистка поля
-    fillArrSquares(); // заполняем массив с данными квадратов
     outputSnake(); // выводим змею
     outputBariers(); // выводим барьеры
     speedSnake = levels[level].speed;
@@ -138,26 +136,24 @@ function loadLevel(level) {
 
 function reset() {
     ctx.clearRect(0, 0, widthCanvas, heightCanvas);
-    arrSquares = [];
     snake = [[12, 22], [12, 23]];
     directionSnake = 'up';
     bariers = [];
 }
 
-function fillArrSquares() {   
+function initSquares() {   
     for (let i = 0; i < columns; i++) {
-        let column = [];
+        let column = new Array(rows).fill('free');
 
+        squares.push(column);
+    }
+}
+
+function resetSquares() {
+    for (let i = 0; i < columns; i++) {
         for (let j = 0; j < rows; j++) {
-            let square = {};
-
-            square.coordinate = [i * widthSquares, j * widthSquares];
-            square.mark = 'free';
-
-            column.push(square);
+            squares[i][j] = 'free';
         }
-
-        arrSquares.push(column);
     }
 }
 
@@ -166,13 +162,14 @@ function outputSnake() {
     ctx.fillStyle = colorSnake;
 
     for (let i = 0; i < lengthSnake; i++) {
-        fillSquare(...snake[i], 'snake');
+        fillSquare(snake[i][0], snake[i][1], 'snake');
     }
 }
 
 function fillSquare(x, y, mark) {
-    ctx.fillRect(...arrSquares[x][y].coordinate, widthSquares, widthSquares);
-    arrSquares[x][y].mark = mark;
+    ctx.fillRect(x * widthSquare, y * widthSquare, widthSquare, widthSquare);
+    
+    squares[x][y] = mark;
 }
 
 function outputBariers() {
@@ -182,6 +179,7 @@ function outputBariers() {
 }
 
 // Игра
+initSquares();
 loadLevel(level);
 let timerId;
 
@@ -193,7 +191,7 @@ function startPlay() {
 }
 
 function outputFood() {
-    const numFree = squares - snake.length - bariers.length; // число свободных квадратов
+    const numFree = columns * rows - snake.length - bariers.length; // число свободных квадратов
 
     const randomSquare = Math.floor(Math.random() * (numFree)) + 1;
 
@@ -201,7 +199,7 @@ function outputFood() {
 
     for (let i = 0; i < columns; i++) {
         for (let j = 0; j < rows; j++) {
-            if (arrSquares[i][j].mark === 'free') {
+            if (squares[i][j] === 'free') {
                 num++;
 
                 if (num === randomSquare) {
@@ -220,7 +218,7 @@ function goSnake() {
         return gameOver();
     }
 
-    let markSquare = arrSquares[nextSquere[0]][nextSquere[1]].mark;
+    let markSquare = squares[nextSquere[0]][nextSquere[1]];
     let lastSquare = snake[snake.length - 1];
     let isLastSquare = lastSquare[0] === nextSquere[0] && lastSquare[1] === nextSquere[1];
 
@@ -236,7 +234,7 @@ function goSnake() {
         snake.unshift(nextSquere);
 
         ctx.fillStyle = colorSnake;
-        fillSquare(...nextSquere, 'snake');
+        fillSquare(nextSquere[0], nextSquere[1], 'snake');
 
         needToEat--;
 
@@ -248,11 +246,11 @@ function goSnake() {
     }
 
     if (markSquare === 'free' || isLastSquare) {
-        removeSquare(...lastSquare);
+        removeSquare(lastSquare[0], lastSquare[1]);
         snake.pop();
 
         ctx.fillStyle = colorSnake;
-        fillSquare(...nextSquere, 'snake');
+        fillSquare(nextSquere[0], nextSquere[1], 'snake');
         snake.unshift(nextSquere);
     }
 }
@@ -279,14 +277,14 @@ function getNextSquare() {
 }
 
 function removeSquare(x, y) {
-    ctx.clearRect(...arrSquares[x][y].coordinate, widthSquares, widthSquares);
-    arrSquares[x][y].mark = 'free';
+    ctx.clearRect(x * widthSquare, y * widthSquare, widthSquare, widthSquare);
+    squares[x][y] = 'free';
 }
 
 function gameOver() {
     clearInterval(timerId);
 
-    ctx.font = widthSquares * 3 + 'px Verdana';
+    ctx.font = widthSquare * 3 + 'px Verdana';
     ctx.textAlign = 'center';
     ctx.fillStyle = 'red';
     ctx.fillText('Конец игры', widthCanvas / 2, heightCanvas / 2);
@@ -302,11 +300,11 @@ function finish() {
     clearInterval(timerId);
     document.removeEventListener('keydown', activeArrows);
 
-    ctx.font = widthSquares * 3 + 'px Verdana';
+    ctx.font = widthSquare * 3 + 'px Verdana';
     ctx.textAlign = 'center';
     ctx.fillStyle = 'green';
-    ctx.fillText('Уровень', widthCanvas / 2, heightCanvas / 2 - 2 * widthSquares);
-    ctx.fillText('пройден', widthCanvas / 2, heightCanvas / 2 + 2 * widthSquares);
+    ctx.fillText('Уровень', widthCanvas / 2, heightCanvas / 2 - 2 * widthSquare);
+    ctx.fillText('пройден', widthCanvas / 2, heightCanvas / 2 + 2 * widthSquare);
 
     if (level < levels.length - 1) {
         level++;
