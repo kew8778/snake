@@ -136,6 +136,7 @@ function loadLevel(level) {
 
 function reset() {
     ctx.clearRect(0, 0, widthCanvas, heightCanvas);
+    resetSquares();
     snake = [[12, 22], [12, 23]];
     directionSnake = 'up';
     bariers = [];
