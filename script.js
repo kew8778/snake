@@ -16,7 +16,6 @@ const right = document.querySelector('.right');
 
 
 // Переменные
-let test = [];
 let widthCanvas = canvas.width;
 let heightCanvas = canvas.height;
 let columns = 25; // кол-во столбцов
@@ -73,11 +72,6 @@ function pause() {
     btn.removeEventListener('click', pause);
     btn.textContent = 'Continue';
     btn.addEventListener('click', continuePlay);
-    let res = 0;
-    for (let i =0; i < test.length; i++) {
-        res += test[i];
-    }
-    console.log(res / test.length);
 }
 
 function continuePlay() {
@@ -253,7 +247,6 @@ function goSnake() {  // доработать *******************
     }
 
     if (markNextSquare === 'free' || isLastSquare) {
-        let a = Date.now();
         let nextTailSnake = getTailSnake();
         removeSquare(tailSnake[0], tailSnake[1]);
         tailSnake = nextTailSnake;
@@ -262,8 +255,6 @@ function goSnake() {  // доработать *******************
         fillSquare(nextSquere[0], nextSquere[1], 'head');
         squares[headSnake[0]][headSnake[1]] = directionSnake;
         headSnake = nextSquere;
-        let b = Date.now();
-        test.push(b - a);
     }
 }
 
