@@ -1,47 +1,77 @@
 .page {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin: 0;
-    padding: 1.85vmin;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0;
+  padding: 1.85vmin;
 
-    background-color: bisque;
+  background-color: bisque;
 }
 
 .control-box {
-    display: block;
-    padding: 10vmin 10vmin 0;
-    text-align: center;
+  display: block;
+  padding: 10vmin 10vmin 0;
+  text-align: center;
 }
 
 .canvas-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 96.3vmin;
-    height: 96.3vmin;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 96.3vmin;
+  height: 96.3vmin;
 }
 
 .ctx {
-    background-color: #0ff855;
-    border: 1.85vmin solid black;
+  background-color: #0ff855;
+  border: 1.85vmin solid black;
 }
 
 .btn {
-    font-size: 30px;
-    background-color: yellow;
-    margin-bottom: 30px;
+  font-size: 30px;
+  background-color: yellow;
+  margin-bottom: 30px;
 }
 
 .btns {
-    font-size: 70px;
-    font-family: monospace;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 200px;
+  height: 200px;
 }
 
-.up:hover, .down:hover, .left:hover, .right:hover, .btn:hover {
-    cursor: pointer;
+.btns__flex-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
 }
 
-.up:active, .down:active, .left:active, .right:active {
-    color: red;
+.up, .left, .right, .down {
+  box-sizing: border-box;
+
+  width: 60px;
+  height: 60px;
+
+  background-color: aqua;
+  border: 2px solid black;
+  border-radius: 25px;
+}
+
+.up:hover, .down:hover, .left:hover, .right:hover {
+  cursor: pointer;
+  background-color: yellow;
+}
+
+.btn:hover {
+  cursor: pointer;
+  background-color: aqua;
+}
+
+.up:active, .down:active, .left:active, .right:active, .btn:active {
+  background-color: red;
 }
