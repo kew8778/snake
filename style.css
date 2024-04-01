@@ -27,10 +27,16 @@
   border: 1.85vmin solid black;
 }
 
-.btn {
+/* btn-start */
+
+.btn-start {
   font-size: 30px;
   background-color: yellow;
   margin-bottom: 30px;
+}
+
+.btn-start:active {
+  background-color: red;
 }
 
 .btns {
@@ -72,6 +78,6 @@
   background-color: aqua;
 }
 
-.up:active, .down:active, .left:active, .right:active, .btn:active {
+.up:active, .down:active, .left:active, .right:active {
   background-color: red;
 }

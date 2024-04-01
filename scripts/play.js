@@ -1,21 +1,8 @@
-'use strict';
-
-// DOM:
-// - поле canvas
-const canvas = document.querySelector('.ctx');
-const ctx = canvas.getContext('2d');
-
-// - кнопка старт/пауза
-const btn = document.querySelector('.btn');
-
-// - кнопки направления
-const up = document.querySelector('.up');
-const down = document.querySelector('.down');
-const left = document.querySelector('.left');
-const right = document.querySelector('.right');
-
+import { canvas, btnStart, up, down, left, right } from "./dom.js"; // DOM-элементы
+import { levels } from "../data/levels.js"; // уровни игры
 
 // Переменные
+const ctx = canvas.getContext('2d');
 let widthCanvas = canvas.width;
 let heightCanvas = canvas.height;
 let columns = 25; // кол-во столбцов
@@ -36,26 +23,15 @@ let colorFood = 'blue'; // цвет еды
 let level = 0; // текущий уровень
 let needToEat; // нужно съесть
 
-const levels = [
-  {speed: 500, foods: 5},
-  {speed: 400, foods: 7},
-  {speed: 320, foods: 9},
-  {speed: 256, foods: 11},
-  {speed: 205, foods: 13},
-  {speed: 164, foods: 15},
-  {speed: 131, foods: 17},
-  {speed: 105, foods: 19},
-]; // уровни игры
-
 // Управление
-btn.addEventListener('click', start);
+btnStart.addEventListener('click', start);
 
 function start() {
   loadLevel(level);
 
-  btn.removeEventListener('click', start);
-  btn.textContent = 'Pause';
-  btn.addEventListener('click', pause);
+  btnStart.removeEventListener('click', start);
+  btnStart.textContent = 'Pause';
+  btnStart.addEventListener('click', pause);
   
   outputFood();
   startPlay();
@@ -64,16 +40,16 @@ function start() {
 function pause() {
   clearInterval(timerId);
   document.removeEventListener('keydown', activeArrows);
-  btn.removeEventListener('click', pause);
-  btn.textContent = 'Continue';
-  btn.addEventListener('click', continuePlay);
+  btnStart.removeEventListener('click', pause);
+  btnStart.textContent = 'Continue';
+  btnStart.addEventListener('click', continuePlay);
 }
 
 function continuePlay() {
   startPlay();
-  btn.removeEventListener('click', continuePlay);
-  btn.textContent = 'Pause';
-  btn.addEventListener('click', pause);
+  btnStart.removeEventListener('click', continuePlay);
+  btnStart.textContent = 'Pause';
+  btnStart.addEventListener('click', pause);
 }
 
 // кнопки направления змеи
@@ -192,7 +168,6 @@ function startPlay() {
 }
 
 function outputFood() {
-  console.time('test');
   const numFree = columns * rows - snake.length - bariers.length; // число свободных квадратов
 
   const randomSquare = Math.floor(Math.random() * (numFree)) + 1;
@@ -206,7 +181,7 @@ function outputFood() {
 
         if (num === randomSquare) {
           ctx.fillStyle = colorFood;
-          console.timeEnd('test');
+
           return fillSquare(i, j, 'food');
         }
       }
@@ -292,9 +267,9 @@ function gameOver() {
   ctx.fillStyle = 'red';
   ctx.fillText('Конец игры', widthCanvas / 2, heightCanvas / 2);
 
-  btn.removeEventListener('click', pause);
-  btn.textContent = 'Start';
-  btn.addEventListener('click', start);
+  btnStart.removeEventListener('click', pause);
+  btnStart.textContent = 'Start';
+  btnStart.addEventListener('click', start);
   
   document.removeEventListener('keydown', activeArrows);
 }
@@ -313,7 +288,7 @@ function finish() {
     level++;
   }
 
-  btn.removeEventListener('click', pause);
-  btn.textContent = 'Start';
-  btn.addEventListener('click', start);
+  btnStart.removeEventListener('click', pause);
+  btnStart.textContent = 'Start';
+  btnStart.addEventListener('click', start);
 }
